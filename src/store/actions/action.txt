@@ -1,0 +1,1 @@
+chứa những hàm để đưa tới redux để xử lí

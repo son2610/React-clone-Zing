@@ -1,66 +1,39 @@
-import { useState } from "react";
+//import { useState } from "react";
+//useSelector -> lay du lieu tu redux
+//useDispatch -> mang action toi redux
+//import {useSelector, useDispatch} from 'react-redux'
+
+import {Home, Login, Public} from './containers/public/'
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function App() {
-    const [work, setWork] = useState("");
-    const [toDos, setToDos] = useState([]);
-    const handleAdd = () => {
-        if (toDos.some((item) => item.id === work.replace(/\s/g, ""))) {
-            toast.warn("ToDo da ton tai truoc do");
-        } else {
-            setToDos((prev) => [
-                ...prev,
-                { id: work.replace(/\s/g, ""), job: work },
-            ]);
-            setWork("");
-            toast.success("Them thanh cong");
-        }
-    };
+import {Routes, Route} from 'react-router-dom';
+import path from './ultils/path'
 
-    const hanldleDeleteJob = (id) => {
-        setToDos(prev => prev.filter(item => item.id !== id))
-    };
+function App() {
+
+    // hàm này để thử xem hàm redux đã được thực hiện chưa
+    //kết quả là thằng app.js đã lấy được state của thằng appReducer
+     // const {test} = useSelector(state => state.app)
+     // console.log(test)
 
     return (
         <>
-            <div className="flex gap-4 flex-col h-screen border justify-center items-center">
-                <div className="flex gap-8">
-                    <input
-                        type="text"
-                        className="outline-none border border-blue-600 px-4 py-2 w-[400px]"
-                        value={work}
-                        onChange={(e) => setWork(e.target.value)}
-                    />
-                    <button
-                        type="button"
-                        className="outline-none px-4 py-2 bg-blue-500 rounded-md text-white"
-                        onClick={handleAdd}
-                    >
-                        Add
-                    </button>
-                </div>
-                <div>
-                    <h3>Content: </h3>
-                    <ul className="flex gap-2 flex-col">
-                        {toDos?.map((item) => {
-                            return (
-                                <li key={item.id} className="flex gap-4">
-                                    <span className="my-2 ">{item.job}</span>
-                                    <span
-                                        onClick={() =>
-                                            hanldleDeleteJob(item.id)
-                                        }
-                                        className="my-2 cursor-pointer"
-                                    >
-                                        X
-                                    </span>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
+            <div className="">
+                <Routes>
+                    {/* /* đại diẹn cho toan bộ ký tự nhập vào
+                    Nếu người dùng nhập sai thì url sẻ chuyển về Public.js
+                    Đây gọi là Nested Router -> router lồng router*/}
+                    <Route path= {path.PUBLIC} element={<Public />}>
+                        {/* Muốn build router home thì thằng cha phải sử dụng thêm componen 
+                            Nếu khong thì khi vào /home thì browser chỉ render thằng cha Public */} Outlet
+                        <Route path={path.HOME} element={<Home/>}/>
+                        <Route path={path.LOGIN} element={<Login/>}/>
+
+                        <Route path={path.START} element={<Home/>}/>
+                    </Route>
+                </Routes>
             </div>
             <ToastContainer
                 position="top-right"
